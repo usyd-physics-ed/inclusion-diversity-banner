@@ -65,6 +65,20 @@
   let windowResizeAmnt = 0;
   let textAlpha = 255;
 
+  let readerText = "There is a banner with a visual of two rectangles. One red at the bottom and one black at the top, like the aboriginal flag. A yellow circle animates upward into the foreground of two rectangles. The yellow circle expands filling the banner whilst it also changes colour to the Sydney university orange colour. An acknowledgement of country text is animated in this banner that reads: " + parOne + "  "  + parTwo + "  "  + parThree + "  "  + parFour;
+
+  //add the aoc start and end dates for S1 and S2
+  //this will be first two weeks of semesters
+  //the date format is in american standard y/m/d
+  //this needs to be updated each year
+  const S1AOCStart = "2023-02-20"
+  const S1AOCEnd = "2023-03-05"
+  const S2AOCStart = "2023-07-31"
+  const S2AOCEnd = "2023-08-13"
+
+  const testDateStart = "2023-05-10"
+  const testDateEnd = "2023-05-11"
+
   function preload(){
     myFont = loadFont('./apercu_medium_pro.otf');
   }
@@ -83,9 +97,50 @@
     if(leftPadding < 0) leftPadding = 0;
     textFont(myFont);
     showText = false
+     //screen reader description function check if present
+     //check for semester one aoc dates
+     checkDateAndRun(S1AOCStart, S1AOCEnd, describeAOC);
+     //check for semester two aoc dates
+     checkDateAndRun(S2AOCStart, S2AOCEnd, describeAOC); 
+     //check for test
+     checkDateAndRun(testDateStart, testDateEnd, describeAOC);  
   }
 
   function draw() {
+    //check for semester one aoc dates
+    checkDateAndRun(S1AOCStart, S1AOCEnd, showAOC);
+    //check for semester two aoc dates
+    checkDateAndRun(S2AOCStart, S2AOCEnd, showAOC);
+    //check for test
+    checkDateAndRun(testDateStart, testDateEnd, showAOC); 
+  }
+
+  function windowResized() {
+     windowResizeAmnt++
+     if(windowResizeAmnt > 5){
+     resizeCanvas(window.innerWidth, window.innerHeight);
+     aFlagYypos = height/2;
+     aFlagYyposEndPoint = aFlagYypos;
+     let leftPadding = (width-616)/2;
+     if(leftPadding < 0) leftPadding = 0;
+     }
+  } 
+
+  function checkDateAndRun(start, end, callback) {
+    const currentDate = new Date();
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+   if (currentDate >= startDate && currentDate <= endDate) {
+     callback();
+   }
+  }
+
+  function describeAOC(){
+    describe(readerText)
+  }
+
+  function showAOC(){
     beginTimer++;
     
     // if(beginTimer > 10 && width < 1) resizeCanvas(window.innerWidth, window.innerHeight);
@@ -164,21 +219,7 @@
         }
       }
     }
-
-
-    
   }
-
-  function windowResized() {
-     windowResizeAmnt++
-     if(windowResizeAmnt > 5){
-     resizeCanvas(window.innerWidth, window.innerHeight);
-     aFlagYypos = height/2;
-     aFlagYyposEndPoint = aFlagYypos;
-     let leftPadding = (width-616)/2;
-     if(leftPadding < 0) leftPadding = 0;
-     }
-  } 
 </script>
 </body>
 </html>
