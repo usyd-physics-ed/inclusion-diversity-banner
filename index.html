@@ -133,6 +133,8 @@
 
    if (currentDate >= startDate && currentDate <= endDate) {
      callback();
+   } else {
+    document.body.style.display = "none";
    }
   }
 
