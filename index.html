@@ -189,23 +189,23 @@
         fontSize = height*0.13;
         if(timer >10) text(parOne,width*0.125,height*0.08,width*0.75,height*0.75);
         timer++;
-        if(timer > 250){
+        if(timer > 390){
           textstage = 1;
           background(toColor);
         }
       } else if(textstage == 1){
         fontSize = height*0.13;
         timer++;
-        if(timer >260)text(parTwo,width*0.125,height*0.08,width*0.75,height*0.75);
-        if(timer > 700){
+        if(timer >400)text(parTwo,width*0.125,height*0.08,width*0.75,height*0.75);
+        if(timer > 900){
           textstage = 2;
           background(toColor);
         }
       } else if(textstage == 2){
         fontSize = height*0.13;
         timer++;
-        if(timer >710)text(parThree,width*0.125,height*0.08,width*0.75,height*0.75);
-        if(timer > 900){
+        if(timer >910)text(parThree,width*0.125,height*0.08,width*0.75,height*0.75);
+        if(timer > 1200){
           textstage = 3;
           background(toColor);
         }
@@ -213,10 +213,10 @@
         fontSize = height*0.13;
         timer++;
         
-        if(timer >930){
+        if(timer >1210){
           text(parFour,width*0.125,height*0.08,width*0.75,height*0.75);
         }
-        if(timer > 1300) {
+        if(timer > 1700) {
           textAlpha-=6;
           if(textAlpha < 10) document.body.style.display = "none";
         }
