@@ -69,15 +69,17 @@
 
   //add the aoc start and end dates for S1 and S2
   //this will be first two weeks of semesters
-  //the date format is in american standard y/m/d
+  //the date format is in american standard y/m/d/t
   //this needs to be updated each year
-  const S1AOCStart = "2023-02-20"
-  const S1AOCEnd = "2023-03-05"
-  const S2AOCStart = "2023-07-31"
-  const S2AOCEnd = "2023-08-13"
+  const S1AOCStart = "2023-02-20T01:00:00"
+  const S1AOCEnd = "2023-03-05T23:00:00"
+  const S2AOCStart = "2023-07-31T01:00:00"
+  const S2AOCEnd = "2023-08-13T23:00:00"
 
-  const testDateStart = "2023-05-10"
-  const testDateEnd = "2023-05-11"
+  const testDateStart = "2023-05-09T01:00:00"
+  const testDateEnd = "2023-05-10T15:30:00"
+
+  let aocShowing = false
 
   function preload(){
     myFont = loadFont('./apercu_medium_pro.otf');
@@ -97,22 +99,23 @@
     if(leftPadding < 0) leftPadding = 0;
     textFont(myFont);
     showText = false
-     //screen reader description function check if present
+     //these are date checks if true they will run the sceen reader
+     //function and also switch the showAOC boolean
      //check for semester one aoc dates
      checkDateAndRun(S1AOCStart, S1AOCEnd, describeAOC);
      //check for semester two aoc dates
      checkDateAndRun(S2AOCStart, S2AOCEnd, describeAOC); 
      //check for test
-     checkDateAndRun(testDateStart, testDateEnd, describeAOC);  
+     checkDateAndRun(testDateStart, testDateEnd, describeAOC); 
+     //if the showAOC boolean is not switched we hide the body of the iframe
+     //so it will not show on the page
+     //if we extend this to other days then we will need to check all dates
+     if(!aocShowing) document.body.style.display = "none";
   }
 
   function draw() {
-    //check for semester one aoc dates
-    checkDateAndRun(S1AOCStart, S1AOCEnd, showAOC);
-    //check for semester two aoc dates
-    checkDateAndRun(S2AOCStart, S2AOCEnd, showAOC);
-    //check for test
-    checkDateAndRun(testDateStart, testDateEnd, showAOC); 
+    // date checks are done in setup and booleans are switched
+    if(aocShowing) showAOC();
   }
 
   function windowResized() {
@@ -130,16 +133,14 @@
     const currentDate = new Date();
     const startDate = new Date(start);
     const endDate = new Date(end);
-
    if (currentDate >= startDate && currentDate <= endDate) {
      callback();
-   } else {
-    document.body.style.display = "none";
    }
   }
 
   function describeAOC(){
     describe(readerText)
+    aocShowing = true;
   }
 
   function showAOC(){
