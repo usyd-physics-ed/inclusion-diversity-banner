@@ -18,8 +18,6 @@
       src: url(apercu_medium_pro.otf);
     }
 
-
-
     ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
       color: #000;
       opacity: 1; /* Firefox */
@@ -76,9 +74,6 @@
   const S2AOCStart = "2023-07-31T01:00:00"
   const S2AOCEnd = "2023-08-13T23:00:00"
 
-  const testDateStart = "2023-05-09T01:00:00"
-  const testDateEnd = "2023-05-10T15:30:00"
-
   let aocShowing = false
 
   function preload(){
@@ -105,8 +100,6 @@
      checkDateAndRun(S1AOCStart, S1AOCEnd, describeAOC);
      //check for semester two aoc dates
      checkDateAndRun(S2AOCStart, S2AOCEnd, describeAOC); 
-     //check for test
-     checkDateAndRun(testDateStart, testDateEnd, describeAOC); 
      //if the showAOC boolean is not switched we hide the body of the iframe
      //so it will not show on the page
      //if we extend this to other days then we will need to check all dates
