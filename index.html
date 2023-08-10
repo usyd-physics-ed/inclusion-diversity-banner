@@ -179,7 +179,8 @@
       fill(255, textAlpha);
       textAlign(CENTER,CENTER);
       aFlagYypos = height + (height/3*2)/2;
-      fontSize = width/height*fontSizeBaseUnit;
+      fontSize = height*0.13
+      //fontSize = width/height*fontSizeBaseUnit;
       fontSize = constrain(fontSize,18,30)
       if(textstage == 0){
         if(timer >10) text(parOne,width*0.125,height*0.08,width*0.75,height*0.75);
