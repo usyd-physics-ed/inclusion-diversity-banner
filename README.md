@@ -1,2 +1,2 @@
-# acknowledgment-of-country
-An animation for the Acknowledgement of Country banner
+# Inclusion and Diversity Banner
+
