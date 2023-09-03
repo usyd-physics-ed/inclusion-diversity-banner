@@ -128,8 +128,11 @@
   const S2AOCStart = "2023-07-31T01:00:00"
   const S2AOCEnd = "2023-08-13T23:00:00"
 
+  const DIWStart = "2023-09-03T23:00:00"
+  const DIWEnd = "2023-09-09T23:00:00"
+
   let aocShowing = false
-  let diwShowing = true
+  let diwShowing = false
 
   //create an element for storing a background img for static background designs
   const bgimg = document.createElement("img");
@@ -167,6 +170,8 @@
      checkDateAndRun(S1AOCStart, S1AOCEnd, describeAOC);
      //check for semester two aoc dates
      checkDateAndRun(S2AOCStart, S2AOCEnd, describeAOC); 
+     //check for disability inclusion week
+     checkDateAndRun(DIWStart, DIWEnd, showDIW);
      //if the showAOC boolean is not switched we hide the body of the iframe
      //so it will not show on the page
      //if we extend this to other days then we will need to check all dates
@@ -211,6 +216,10 @@
   function describeAOC(){
     describe(readerText)
     aocShowing = true;
+  }
+
+  function showDIW(){
+    diwShowing = true;
   }
 
   function showAOC(){
