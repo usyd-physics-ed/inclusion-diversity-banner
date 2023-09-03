@@ -13,9 +13,29 @@
       display: block;
     }
 
+   
+
     @font-face {
       font-family: 'theFont';
       src: url(apercu_medium_pro.otf);
+    }
+    
+    a{
+      text-decoration: underline;
+      text-decoration-style: dashed;
+      text-decoration-thickness: 2px;
+      font-family: theFont;
+      color: #fff;
+      text-underline-offset: 7px;
+    }
+
+    a:hover{
+      text-decoration-style: solid;
+    }
+
+    h1, h3 {
+      font-family: theFont;
+      color: #fff;
     }
 
     ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -29,6 +49,39 @@
 
     ::-ms-input-placeholder { /* Microsoft Edge */
       color: #000;
+    }
+
+    .fade-in-image {
+      animation: fadeIn 1s;
+      -webkit-animation: fadeIn 1s;
+      -moz-animation: fadeIn 1s;
+      -o-animation: fadeIn 1s;
+      -ms-animation: fadeIn 1s;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-moz-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-webkit-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-o-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-ms-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
 
     </style>
@@ -76,6 +129,19 @@
   const S2AOCEnd = "2023-08-13T23:00:00"
 
   let aocShowing = false
+  let diwShowing = true
+
+  //create an element for storing a background img for static background designs
+  const bgimg = document.createElement("img");
+  const bannerImageTitle = document.createElement("h1");
+  const bannerImageSubTitle = document.createElement("h2");
+  const bannerImageArtTitle = document.createElement("h3");
+  const bannerImageArtistTitle = document.createElement("h3");
+  const textDiv = document.createElement("div");
+  const bannerTitleSize = 46;
+  
+  let backgroundSet = false;
+
 
   function preload(){
     myFont = loadFont('./apercu_medium_pro.otf');
@@ -104,12 +170,14 @@
      //if the showAOC boolean is not switched we hide the body of the iframe
      //so it will not show on the page
      //if we extend this to other days then we will need to check all dates
-     if(!aocShowing) document.body.style.display = "none";
+     if(!aocShowing && !diwShowing) document.body.style.display = "none";
+     
   }
 
   function draw() {
     // date checks are done in setup and booleans are switched
     if(aocShowing) showAOC();
+    showDIWAnimation();
   }
 
   function windowResized() {
@@ -122,6 +190,12 @@
      //fontSize = width/height*fontSizeBaseUnit;
      //fontSize = constrain(fontSize,18,30)
      if(leftPadding < 0) leftPadding = 0;
+
+     if(showDIWAnimation){
+      bannerImageTitle.style.fontSize = document.body.clientWidth/bannerTitleSize +"px";
+      bannerImageSubTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+5) +"px";
+      bannerImageArtTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+25) +"px";
+     } 
      }
   } 
 
@@ -140,7 +214,6 @@
   }
 
   function showAOC(){
-    console.log(width/height)
     if(width/height < 1){
       fontSize = height*0.04
     } else if(width/height < 2){
@@ -223,6 +296,70 @@
       }
     }
   }
+  
+  function showDIWAnimation(){
+    beginTimer++;
+    if(beginTimer > 20 && beginTimer < 22) resizeCanvas(window.innerWidth, window.innerHeight);
+    if(beginTimer >30 && !backgroundSet) {
+      setDIWBackground()
+      backgroundSet = true
+    } else if(beginTimer >500){
+      document.body.style.display = "none";
+    }
+    
+  }
+  
+
+  function setDIWBackground(){
+    document.body.style.overflow = "hidden"
+    textDiv.style.position = "absolute";
+    textDiv.style.top = "10px";
+    textDiv.style.color ="#fff";
+    textDiv.style.backgroundColor ="rgba(0, 0, 0, .6) ";
+
+    bgimg.src = "./assets/bannerbackground.jpg";
+    bgimg.style.position = "absolute";
+    bgimg.style.top = "0px";
+
+    bannerImageTitle.style.fontSize = document.body.clientWidth/bannerTitleSize +"px";
+    bannerImageSubTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+5) +"px";
+    bannerImageSubTitle.style.fontStyle = "italic";
+    bannerImageTitle.innerHTML = "<a href='https://www.sydney.edu.au/about-us/vision-and-values/diversity/disability-action-plan/disability-inclusion-week.html' target='_blank'>Disability Inclusion Week</a>"
+    bannerImageSubTitle.innerHTML = "Our stories, our community"
+
+    bannerImageArtTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+25) +"px";
+    bannerImageArtTitle.innerHTML = "Artwork: <br>Our Yura Our Dalang by <a href='https://msunflower.com' target='_blank'>M. Sunflower</a>"
+    bannerImageArtTitle.style.padding ="0px 40px 0px 32px";
+    bannerImageArtTitle.style.margin ="0px 0px 20px 0px";
+    
+    bannerImageTitle.style.padding ="20px 40px 0px 32px";
+    bannerImageTitle.style.margin ="0px";
+    bannerImageSubTitle.style.padding ="15px 15px 22px 32px";
+    bannerImageSubTitle.style.margin ="0px";
+
+   
+    textDiv.appendChild(bannerImageTitle)
+    textDiv.appendChild(bannerImageSubTitle)
+    textDiv.appendChild(bannerImageArtTitle)
+
+    if(width>height){
+      bgimg.style.width = "100%";
+    } else {
+      bgimg.style.height = "100%";
+    }
+   
+    
+    // create a new div element
+    const fadeindiv = document.createElement("div");
+    fadeindiv.style.backgroundColor ="rgba(0, 0, 0, .6) ";
+    
+    fadeindiv.className += "fade-in-image";
+    document.body.appendChild(fadeindiv);
+    fadeindiv.appendChild(bgimg);
+    fadeindiv.appendChild(textDiv);
+
+  }
+
 </script>
 </body>
 </html>
