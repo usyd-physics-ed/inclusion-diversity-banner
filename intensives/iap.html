@@ -13,9 +13,29 @@
       display: block;
     }
 
+   
+
     @font-face {
       font-family: 'theFont';
       src: url(apercu_medium_pro.otf);
+    }
+    
+    a{
+      text-decoration: underline;
+      text-decoration-style: dashed;
+      text-decoration-thickness: 2px;
+      font-family: theFont;
+      color: #fff;
+      text-underline-offset: 7px;
+    }
+
+    a:hover{
+      text-decoration-style: solid;
+    }
+
+    h1, h3 {
+      font-family: theFont;
+      color: #fff;
     }
 
     ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -29,6 +49,39 @@
 
     ::-ms-input-placeholder { /* Microsoft Edge */
       color: #000;
+    }
+
+    .fade-in-image {
+      animation: fadeIn 1s;
+      -webkit-animation: fadeIn 1s;
+      -moz-animation: fadeIn 1s;
+      -o-animation: fadeIn 1s;
+      -ms-animation: fadeIn 1s;
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-moz-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-webkit-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-o-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    @-ms-keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
     }
 
     </style>
@@ -53,6 +106,7 @@
   let showText = false;
   let timer = 0;
   let textstage = 0;
+  let fontSizeBaseUnit = 13;
 
   let parOne = "The University of Sydney acknowledges the custodians and cultural authorities of the lands on which it operates.";
   let parTwo = "The lands of the Gadigal, Deerubbin, Dharug, Kamilaroi, Wiljali, Wangal, Tharawal, Bundjalung, Kur-ing-gai, Cammeraygal and Wiradjuri peoples.";
@@ -72,8 +126,23 @@
   const intensiveStart = "2023-03-20T01:00:00"
   const intensiveEnd = "2023-04-02T23:00:00"
 
+  const DIWStart = "2023-09-03T23:00:00"
+  const DIWEnd = "2023-09-09T23:00:00"
 
   let aocShowing = false
+  let diwShowing = false
+
+  //create an element for storing a background img for static background designs
+  const bgimg = document.createElement("img");
+  const bannerImageTitle = document.createElement("h1");
+  const bannerImageSubTitle = document.createElement("h2");
+  const bannerImageArtTitle = document.createElement("h3");
+  const bannerImageArtistTitle = document.createElement("h3");
+  const textDiv = document.createElement("div");
+  const bannerTitleSize = 46;
+  
+  let backgroundSet = false;
+
 
   function preload(){
     myFont = loadFont('./apercu_medium_pro.otf');
@@ -93,19 +162,22 @@
     if(leftPadding < 0) leftPadding = 0;
     textFont(myFont);
     showText = false
-     //these are date checks if true they will run the sceen reader
-     //function and also switch the showAOC boolean
-     //check for semester one aoc dates
-     checkDateAndRun(intensiveStart, intensiveEnd, describeAOC);
-     //if the showAOC boolean is not switched we hide the body of the iframe
-     //so it will not show on the page
-     //if we extend this to other days then we will need to check all dates
-     if(!aocShowing) document.body.style.display = "none";
+    //check for intensive start dates
+    //describe AOC sets reader text and toggles on aocShowing
+    checkDateAndRun(intensiveStart, intensiveEnd, describeAOC);
+    //check for disability inclusion week
+    checkDateAndRun(DIWStart, DIWEnd, showDIW);
+    //if the showAOC boolean is not switched we hide the body of the iframe
+    //so it will not show on the page
+    //if we extend this to other days then we will need to check all dates
+    if(!aocShowing && !diwShowing) document.body.style.display = "none";
+     
   }
 
   function draw() {
     // date checks are done in setup and booleans are switched
     if(aocShowing) showAOC();
+    if(diwShowing) showDIWAnimation();
   }
 
   function windowResized() {
@@ -115,7 +187,15 @@
      aFlagYypos = height/2;
      aFlagYyposEndPoint = aFlagYypos;
      let leftPadding = (width-616)/2;
+     //fontSize = width/height*fontSizeBaseUnit;
+     //fontSize = constrain(fontSize,18,30)
      if(leftPadding < 0) leftPadding = 0;
+
+     if(showDIWAnimation){
+      bannerImageTitle.style.fontSize = document.body.clientWidth/bannerTitleSize +"px";
+      bannerImageSubTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+5) +"px";
+      bannerImageArtTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+25) +"px";
+     } 
      }
   } 
 
@@ -133,10 +213,20 @@
     aocShowing = true;
   }
 
+  function showDIW(){
+    diwShowing = true;
+  }
+
   function showAOC(){
-    beginTimer++;
+    if(width/height < 1){
+      fontSize = height*0.04
+    } else if(width/height < 2){
+      fontSize = height*0.07
+    } else {
+      fontSize = height*0.11
+    }
     
-    // if(beginTimer > 10 && width < 1) resizeCanvas(window.innerWidth, window.innerHeight);
+    beginTimer++;
     if(beginTimer > 20 && beginTimer < 22) resizeCanvas(window.innerWidth, window.innerHeight);
     if(beginTimer < 99) {
       showText = false;
@@ -175,16 +265,15 @@
       fill(255, textAlpha);
       textAlign(CENTER,CENTER);
       aFlagYypos = height + (height/3*2)/2;
+      fontSize = constrain(fontSize,18,30)
       if(textstage == 0){
-        fontSize = height*0.13;
         if(timer >10) text(parOne,width*0.125,height*0.08,width*0.75,height*0.75);
         timer++;
         if(timer > 390){
           textstage = 1;
           background(toColor);
         }
-      } else if(textstage == 1){
-        fontSize = height*0.13;
+      } else if(textstage == 1){ 
         timer++;
         if(timer >400)text(parTwo,width*0.125,height*0.08,width*0.75,height*0.75);
         if(timer > 900){
@@ -192,7 +281,6 @@
           background(toColor);
         }
       } else if(textstage == 2){
-        fontSize = height*0.13;
         timer++;
         if(timer >910)text(parThree,width*0.125,height*0.08,width*0.75,height*0.75);
         if(timer > 1200){
@@ -200,7 +288,6 @@
           background(toColor);
         }
       } else if(textstage == 3){
-        fontSize = height*0.13;
         timer++;
         
         if(timer >1210){
@@ -213,6 +300,70 @@
       }
     }
   }
+  
+  function showDIWAnimation(){
+    beginTimer++;
+    if(beginTimer > 20 && beginTimer < 22) resizeCanvas(window.innerWidth, window.innerHeight);
+    if(beginTimer >30 && !backgroundSet) {
+      setDIWBackground()
+      backgroundSet = true
+    } else if(beginTimer >500){
+      document.body.style.display = "none";
+    }
+    
+  }
+  
+
+  function setDIWBackground(){
+    document.body.style.overflow = "hidden"
+    textDiv.style.position = "absolute";
+    textDiv.style.top = "10px";
+    textDiv.style.color ="#fff";
+    textDiv.style.backgroundColor ="rgba(0, 0, 0, .6) ";
+
+    bgimg.src = "../assets/bannerbackground.jpg";
+    bgimg.style.position = "absolute";
+    bgimg.style.top = "0px";
+
+    bannerImageTitle.style.fontSize = document.body.clientWidth/bannerTitleSize +"px";
+    bannerImageSubTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+5) +"px";
+    bannerImageSubTitle.style.fontStyle = "italic";
+    bannerImageTitle.innerHTML = "<a href='https://www.sydney.edu.au/about-us/vision-and-values/diversity/disability-action-plan/disability-inclusion-week.html' target='_blank'>Disability Inclusion Week</a>"
+    bannerImageSubTitle.innerHTML = "Our stories, our community"
+
+    bannerImageArtTitle.style.fontSize = document.body.clientWidth/(bannerTitleSize+25) +"px";
+    bannerImageArtTitle.innerHTML = "Artwork: <br>Our Yura Our Dalang by <a href='https://msunflower.com' target='_blank'>M. Sunflower</a>"
+    bannerImageArtTitle.style.padding ="0px 40px 0px 32px";
+    bannerImageArtTitle.style.margin ="0px 0px 20px 0px";
+    
+    bannerImageTitle.style.padding ="20px 40px 0px 32px";
+    bannerImageTitle.style.margin ="0px";
+    bannerImageSubTitle.style.padding ="15px 15px 22px 32px";
+    bannerImageSubTitle.style.margin ="0px";
+
+   
+    textDiv.appendChild(bannerImageTitle)
+    textDiv.appendChild(bannerImageSubTitle)
+    textDiv.appendChild(bannerImageArtTitle)
+
+    if(width>height){
+      bgimg.style.width = "100%";
+    } else {
+      bgimg.style.height = "100%";
+    }
+   
+    
+    // create a new div element
+    const fadeindiv = document.createElement("div");
+    fadeindiv.style.backgroundColor ="rgba(0, 0, 0, .6) ";
+    
+    fadeindiv.className += "fade-in-image";
+    document.body.appendChild(fadeindiv);
+    fadeindiv.appendChild(bgimg);
+    fadeindiv.appendChild(textDiv);
+
+  }
+
 </script>
 </body>
 </html>
